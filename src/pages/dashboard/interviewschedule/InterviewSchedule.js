@@ -24,6 +24,7 @@ import DataTable from "react-data-table-component";
 import index from "../../../index.css";
 import { BsDownload } from "react-icons/bs";
 import { Document, Page } from "react-pdf";
+import { BsFillEyeFill } from "react-icons/bs";
 
 const InterviewSchedule = () => {
   const [data, setData] = useState("");
@@ -485,19 +486,21 @@ const InterviewSchedule = () => {
             </button>
           ) : null}
 
-          {filteredDataPID[0]?.result_url ? (
-            <BsDownload
-              size={30}
-              className="bg-gray-800 text-white my-4 m-1 w-6 p-1 h-6 hover:cursor-pointer"
-              onClick={handleDownloadResume}
-            />
-          ) : (
+          <div style={{ display: "flex" }}>
+            {filteredDataPID[0]?.result_url && (
+              <BsFillEyeFill
+                size={30}
+                className="bg-gray-800 text-white my-4 m-1 w-6 p-1 h-6 hover:cursor-pointer"
+                onClick={handleDownloadResume}
+              />
+            )}
+
             <AiOutlineCloudUpload
               size={30}
-              className="bg-gray-800 text-white my-4 m-1 w-6 p-1 h-6 hover:cursor-pointer"
+              className="bg-gray-800 text-white my-4 m-1 w-6 p-1 h-6 hover:cursor-pointer ms-1"
               onClick={() => setinterviewPopup(true)}
             />
-          )}
+          </div>
         </div>
       ),
       sortable: false,
