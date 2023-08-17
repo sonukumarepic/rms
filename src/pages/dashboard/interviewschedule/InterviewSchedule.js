@@ -25,6 +25,7 @@ import index from "../../../index.css";
 import { BsDownload } from "react-icons/bs";
 import { Document, Page } from "react-pdf";
 import { BsFillEyeFill } from "react-icons/bs";
+import toasthot from "react-hot-toast";
 
 const InterviewSchedule = () => {
   const [data, setData] = useState("");
@@ -737,7 +738,8 @@ const InterviewSchedule = () => {
     },
   ];
 
-  const handleUpload = () => {
+  const handleUpload = (event) => {
+    event.preventDefault();
     axios
       .post(
         `${process.env.REACT_APP_API_URL}upload-result/${uploadid}`,
@@ -759,6 +761,8 @@ const InterviewSchedule = () => {
       })
       .catch((err) => {
         console.log(err);
+        toasthot.error(err?.response?.data?.message?.file[0]);
+        toasthot.error(err?.response?.data?.message?.status_id[0]);
       });
   };
 
@@ -818,49 +822,54 @@ const InterviewSchedule = () => {
               <option value="option1">Interview 1</option>
               <option value="option2">Interview 2</option>
             </select> */}
-
-              <select
-                value={selectedValuepass}
-                onChange={(e) => setSelectedValuePass(e.target.value)}
-                className="input"
-              >
-                <option value="">Select Pass/Fail</option>
-                <option value={8}>Pass</option>
-                <option value={9}>Fail</option>
-              </select>
-              <div className=" pt-4 bg-grey-lighter">
-                {/* <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-red-400">
+              <form>
+                <select
+                  value={selectedValuepass}
+                  onChange={(e) => setSelectedValuePass(e.target.value)}
+                  className="input"
+                  required
+                >
+                  <option selected disabled value="">
+                    Select Pass/Fail
+                  </option>
+                  <option value={8}>Pass</option>
+                  <option value={9}>Fail</option>
+                </select>
+                <div className=" pt-4 bg-grey-lighter">
+                  {/* <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue hover:text-red-400">
                                 <svg className="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                                 </svg> */}
-                {/* <span className="mt-2 text-base leading-normal">UPLOAD OTHER</span> */}
-                {/* </label> */}
-                <input
-                  onChange={handleFileInputChange}
-                  type="file"
-                  required
-                  className="block w-full text-sm text-slate-500
+                  {/* <span className="mt-2 text-base leading-normal">UPLOAD OTHER</span> */}
+                  {/* </label> */}
+                  <input
+                    onChange={handleFileInputChange}
+                    type="file"
+                    required
+                    className="block w-full text-sm text-slate-500
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
                                 file:bg-gray-500 file:text-white hover:file:text-primary
                                 hover:file:bg-gray-100
                                 "
-                />
-              </div>
-              {/* <input type="file" /> */}
-              <button
-                onClick={handleUpload}
-                className="px-6 text-white font-semibold rounded py-2 bg-green-500 mt-4"
-              >
-                Submit
-              </button>
-              <button
-                onClick={() => setinterviewPopup(false)}
-                className="px-6 text-white font-semibold rounded py-2 bg-green-500 ml-4 mt-4"
-              >
-                Cancel
-              </button>
+                  />
+                </div>
+                {/* <input type="file" /> */}
+                <button
+                  onClick={handleUpload}
+                  type="submit"
+                  className="px-6 text-white font-semibold rounded py-2 bg-green-500 mt-4"
+                >
+                  Submit
+                </button>
+                <button
+                  onClick={() => setinterviewPopup(false)}
+                  className="px-6 text-white font-semibold rounded py-2 bg-green-500 ml-4 mt-4"
+                >
+                  Cancel
+                </button>
+              </form>
             </div>
           </div>
         )}

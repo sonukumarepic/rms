@@ -895,7 +895,9 @@ const JobApplication = () => {
         <div className="p-4">
           <div className="grid bg-white w-full border-t-2 my-2 border-gray-900  shadow grid-cols-12">
             <div className="p-4 col-span-4">
-              <h2 className={`my-1 text-lg`}>PID</h2>
+              <h2 className={`my-1 text-lg`}>
+                PID <span className="text-red-400">*</span>
+              </h2>
               <Select
                 isClearable
                 options={
@@ -913,6 +915,7 @@ const JobApplication = () => {
                   );
                 }}
                 className="w-full "
+                required
               />
             </div>
             <div className="p-4 col-span-3">
