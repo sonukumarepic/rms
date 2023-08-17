@@ -52,7 +52,7 @@ const InterviewSchedule = () => {
   const [apiError, setApiError] = useState("");
   const [interviewPopup, setinterviewPopup] = useState(false);
   const [selectedValue, setSelectedValue] = useState("");
-  const [selectedValuepass, setSelectedValuePass] = useState("");
+  const [selectedValuepass, setSelectedValuePass] = useState(null);
   const [listForm, setListForm] = useState("");
   const [jobId, setJobId] = useState("");
   const [jobRecruitmentData, setJobRecruitmentData] = useState("");
@@ -125,33 +125,33 @@ const InterviewSchedule = () => {
   }, []);
   const getAssigneeData = async () => {
     // console.log("Jobd ID",jobId)
-    // if (jobId !== "" || null || undefined) {
-    const formData = new FormData();
-    formData.append("location", locationSearch);
-    formData.append("project_manager", hodSearch);
-    const request = await axios.postForm(
-      `${process.env.REACT_APP_API_URL}job-applications/${jobId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `${authorize}`,
-        },
+    if (jobId !== "" || null || undefined) {
+      const formData = new FormData();
+      formData.append("location", locationSearch);
+      formData.append("project_manager", hodSearch);
+      const request = await axios.postForm(
+        `${process.env.REACT_APP_API_URL}job-applications/${jobId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `${authorize}`,
+          },
+        }
+      );
+      // console.log("Request",request)
+      const response = request.data;
+      console.log("response", response);
+      if (response) {
+        setFilteredDataPID(response.data);
       }
-    );
-    // console.log("Request",request)
-    const response = request.data;
-    console.log("response", response);
-    if (response) {
-      setFilteredDataPID(response.data);
     }
-    // }
     if (jobId === "" || null || undefined) {
-      // toast.error("Please Select PID");
+      toast.error("Please Select PID");
     }
   };
 
   useEffect(() => {
-    getAssigneeData();
+    // getAssigneeData();
   }, [interviewPopup]);
 
   const getEditData = async () => {
@@ -740,30 +740,43 @@ const InterviewSchedule = () => {
 
   const handleUpload = (event) => {
     event.preventDefault();
-    axios
-      .post(
-        `${process.env.REACT_APP_API_URL}upload-result/${uploadid}`,
-        {
-          status: selectedValuepass,
-          file: selectedFile,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `${authorize}`,
+
+    if (selectedFile == null) {
+      toasthot.error("Please Choose File");
+    } else if (selectedValuepass == null) {
+      toasthot.error("Please Select Pass or Fail");
+    }
+
+    if (selectedFile != null && selectedValuepass != null) {
+      axios
+        .post(
+          `${process.env.REACT_APP_API_URL}upload-result/${uploadid}`,
+          {
+            status_id: selectedValuepass,
+            file: selectedFile,
           },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        toast.success(res.data.message);
-        setinterviewPopup(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        toasthot.error(err?.response?.data?.message?.file[0]);
-        toasthot.error(err?.response?.data?.message?.status_id[0]);
-      });
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `${authorize}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          toast.success(res.data.message);
+          setinterviewPopup(false);
+          setSelectedValuePass(null);
+          setSelectedFile(null);
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err?.response?.data?.message?.hasOwnProperty("file"))
+            toasthot.error(err?.response?.data?.message?.file[0]);
+          if (err?.response?.data?.message?.hasOwnProperty("status_id"))
+            toasthot.error(err?.response?.data?.message?.status_id[0]);
+        });
+    }
   };
 
   useEffect(() => {
