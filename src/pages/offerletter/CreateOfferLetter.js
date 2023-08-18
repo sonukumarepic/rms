@@ -94,18 +94,23 @@ const OfferLetter = () => {
         const newWindow = window.open("", "_blank");
         newWindow.document.open();
         newWindow.document.write(`
-                  <!DOCTYPE html>
+                  <!DOCTYPE html> 
                   <html>
                     <head>
                       <title>Print</title>
                     </head>
                     <body>
                       ${html}
+                      <script>
+                      window.onload = function() {
+                        window.print();
+                      };
+                    </script>
                     </body>
                   </html>
                 `);
         newWindow.document.close();
-        newWindow.print();
+        // newWindow.print();
       }
     });
   };
@@ -202,43 +207,51 @@ const OfferLetter = () => {
         <img src={Logo} className="w-40 h-10" />
       </div>
 
-      <img src={head} alt="Logo" style={{ width: "700px" }} className="head" />
-      <div className="p-4">
-        <div className="print:hidden">
-          <h2 className="text-xl font-medium">Offer Letter</h2>
-        </div>
-        <div className=" p-4 print:block border-gray-200 border bg-gray-50">
-          <div
-            id="div-to-download"
-            style={{ display: "block !important" }}
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(data.message),
-            }}
-          ></div>
-        </div>
-
-        <div className="bottomimg">
-          <img className="bottomlg" src={bottomimg} alt="bottomimg" />
-        </div>
-        <div className="logodiv mx-auto">
-          <div className="footerlogo">
-            <img className="footerlg" src={footerlogo} alt="footerlogo" />
+      <div id="div-to-download" className="print:block">
+        <div className="p-4">
+          <div className="print:block">
+            <img
+              src={head}
+              alt="Logo"
+              style={{ width: "700px" }}
+              className="head mx-auto div-to-download-head"
+            />
+            <h2 className="text-xl font-medium">Offer Letter</h2>
+          </div>
+          <div className=" p-4 print:block border ">
+            <div
+              style={{ display: "block !important" }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(data.message),
+              }}
+            ></div>
+            <div className="div-to-download-bottom">
+              <div className="bottomimg ">
+                <img className="bottomlg" src={bottomimg} alt="bottomimg" />
+              </div>
+              <div className="logodiv mx-auto">
+                <div className="footerlogo">
+                  <img className="footerlg" src={footerlogo} alt="footerlogo" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="py-2 print:hidden">
-          <button
-            onClick={() => handleAccept()}
-            className="py-2 px-6 hover:bg-green-600 mr-2 font-medium rounded-sm bg-green-500 text-white delay-75 duration-75"
-          >
-            Accept
-          </button>
-          <button
-            onClick={() => handleRejection()}
-            className="py-2 px-6 hover:bg-red-600 ml-2 font-medium rounded-sm bg-red-500 text-white delay-75 duration-75"
-          >
-            Reject
-          </button>
-        </div>
+      </div>
+
+      <div className="py-2 print:hidden">
+        <button
+          onClick={() => handleAccept()}
+          className="py-2 px-6 hover:bg-green-600 mr-2 font-medium rounded-sm bg-green-500 text-white delay-75 duration-75"
+        >
+          Accept
+        </button>
+        <button
+          onClick={() => handleRejection()}
+          className="py-2 px-6 hover:bg-red-600 ml-2 font-medium rounded-sm bg-red-500 text-white delay-75 duration-75"
+        >
+          Reject
+        </button>
       </div>
     </div>
   );
